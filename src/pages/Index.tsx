@@ -8,13 +8,13 @@ import ConnectionList from "@/components/ConnectionList";
 
 const Index = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [userData, setUserData] = useState({
-    email: "",
-    phoneNumber: "",
-    linkedinUrl: "",
-  });
+  const [userData, setUserData] = useState<{
+    email?: string;
+    phoneNumber?: string;
+    linkedinUrl?: string;
+  }>({});
 
-  const handleAuthSubmit = (data: { email: string; phoneNumber: string }) => {
+  const handleAuthSubmit = (data: { email?: string; phoneNumber?: string }) => {
     setUserData((prev) => ({ ...prev, ...data }));
     setCurrentStep(2);
   };
@@ -30,11 +30,7 @@ const Index = () => {
 
   const handleRestart = () => {
     setCurrentStep(1);
-    setUserData({
-      email: "",
-      phoneNumber: "",
-      linkedinUrl: "",
-    });
+    setUserData({});
   };
 
   const renderStep = () => {
@@ -44,7 +40,8 @@ const Index = () => {
       case 2:
         return (
           <OtpVerification
-            phoneNumber={userData.phoneNumber}
+            phoneNumber={userData.phoneNumber || ''}
+            email={userData.email}
             onBack={() => setCurrentStep(1)}
             onNext={handleOtpSuccess}
           />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,12 +5,13 @@ import { Input } from "@/components/ui/input";
 import { ShieldCheck } from "lucide-react";
 
 interface OtpVerificationProps {
-  phoneNumber: string;
+  phoneNumber?: string;
+  email?: string;
   onBack: () => void;
   onNext: () => void;
 }
 
-const OtpVerification = ({ phoneNumber, onBack, onNext }: OtpVerificationProps) => {
+const OtpVerification = ({ phoneNumber, email, onBack, onNext }: OtpVerificationProps) => {
   const [otp, setOtp] = useState<string[]>(['', '', '', '']);
   const [timer, setTimer] = useState(60);
   const [error, setError] = useState('');
@@ -31,21 +31,18 @@ const OtpVerification = ({ phoneNumber, onBack, onNext }: OtpVerificationProps) 
   }, []);
 
   const handleChange = (index: number, value: string) => {
-    // Only allow digits
     if (!/^\d*$/.test(value)) return;
     
     const newOtp = [...otp];
     newOtp[index] = value.charAt(0);
     setOtp(newOtp);
     
-    // Auto-move to next input
     if (value && index < 3 && inputRefs[index + 1].current) {
       inputRefs[index + 1].current?.focus();
     }
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Move to previous input on backspace if current input is empty
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
       inputRefs[index - 1].current?.focus();
     }
@@ -62,7 +59,6 @@ const OtpVerification = ({ phoneNumber, onBack, onNext }: OtpVerificationProps) 
       });
       setOtp(newOtp);
       
-      // Focus the appropriate input based on paste content length
       if (pastedData.length < 4 && pastedData.length > 0 && inputRefs[pastedData.length].current) {
         inputRefs[pastedData.length].current?.focus();
       }
@@ -77,7 +73,6 @@ const OtpVerification = ({ phoneNumber, onBack, onNext }: OtpVerificationProps) 
       return;
     }
     
-    // For demonstration, let's assume "1234" is the valid OTP
     if (enteredOtp === "1234") {
       onNext();
     } else {
@@ -89,11 +84,21 @@ const OtpVerification = ({ phoneNumber, onBack, onNext }: OtpVerificationProps) 
     setTimer(60);
     setOtp(['', '', '', '']);
     setError('');
-    // In a real app, you would call your API to resend the OTP here
   };
 
   const handleBackClick = () => {
     if (onBack) onBack();
+  };
+
+  const getMaskedContact = () => {
+    if (phoneNumber) {
+      return `${phoneNumber.substring(0, 3)}*****${phoneNumber.substring(phoneNumber.length - 2)}`;
+    }
+    if (email) {
+      const [username, domain] = email.split('@');
+      return `${username.substring(0, 2)}****@${domain}`;
+    }
+    return '';
   };
 
   return (
@@ -101,10 +106,10 @@ const OtpVerification = ({ phoneNumber, onBack, onNext }: OtpVerificationProps) 
       <CardHeader>
         <CardTitle className="flex items-center justify-center gap-2">
           <ShieldCheck className="h-6 w-6 text-primary" />
-          Verify Your Phone
+          Verify Your {phoneNumber ? 'Phone' : 'Email'}
         </CardTitle>
         <CardDescription className="text-center">
-          We sent a code to {phoneNumber.substring(0, 3)}*****{phoneNumber.substring(phoneNumber.length - 2)}
+          We sent a code to {getMaskedContact()}
         </CardDescription>
       </CardHeader>
       <CardContent>
