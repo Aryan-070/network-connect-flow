@@ -9,7 +9,7 @@ export interface User {
   name: string;
   role: string;
   company: string;
-  mutualConnections: number;
+  profileMatchPercentage: number;
   avatarUrl: string;
   linkedinUrl: string;
 }
@@ -42,7 +42,7 @@ const UserCard = ({ user }: UserCardProps) => {
       </CardContent>
       <CardDescription className="px-6 pb-2">
         <span className="text-sm text-muted-foreground">
-          {user.mutualConnections} mutual connection{user.mutualConnections !== 1 ? 's' : ''}
+          {user.profileMatchPercentage}% profile match
         </span>
       </CardDescription>
       <CardFooter className="flex justify-between p-6 pt-2">

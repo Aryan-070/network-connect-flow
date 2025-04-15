@@ -17,7 +17,7 @@ const ConnectionList = ({ onRestart }: ConnectionListProps) => {
       name: 'Sarah Johnson',
       role: 'Product Manager',
       company: 'Tech Innovations Inc.',
-      mutualConnections: 12,
+      profileMatchPercentage: 85,
       avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
       linkedinUrl: 'https://linkedin.com/in/sarahjohnson'
     },
@@ -26,7 +26,7 @@ const ConnectionList = ({ onRestart }: ConnectionListProps) => {
       name: 'Michael Chen',
       role: 'Software Engineer',
       company: 'Growth Solutions',
-      mutualConnections: 8,
+      profileMatchPercentage: 72,
       avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6',
       linkedinUrl: 'https://linkedin.com/in/michaelchen'
     },
@@ -35,7 +35,7 @@ const ConnectionList = ({ onRestart }: ConnectionListProps) => {
       name: 'Jessica Williams',
       role: 'Marketing Director',
       company: 'Brand Partners',
-      mutualConnections: 5,
+      profileMatchPercentage: 63,
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
       linkedinUrl: 'https://linkedin.com/in/jessicawilliams'
     },
@@ -44,7 +44,7 @@ const ConnectionList = ({ onRestart }: ConnectionListProps) => {
       name: 'David Garcia',
       role: 'Data Scientist',
       company: 'Analytics Pro',
-      mutualConnections: 3,
+      profileMatchPercentage: 55,
       avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
       linkedinUrl: 'https://linkedin.com/in/davidgarcia'
     },
@@ -53,7 +53,7 @@ const ConnectionList = ({ onRestart }: ConnectionListProps) => {
       name: 'Emily Zhang',
       role: 'UX Designer',
       company: 'Creative Solutions',
-      mutualConnections: 7,
+      profileMatchPercentage: 78,
       avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
       linkedinUrl: 'https://linkedin.com/in/emilyzhang'
     },
@@ -62,7 +62,7 @@ const ConnectionList = ({ onRestart }: ConnectionListProps) => {
       name: 'Robert Taylor',
       role: 'CTO',
       company: 'Future Tech',
-      mutualConnections: 2,
+      profileMatchPercentage: 45,
       avatarUrl: 'https://images.unsplash.com/photo-1545996124-0501ebae84d0',
       linkedinUrl: 'https://linkedin.com/in/roberttaylor'
     },
