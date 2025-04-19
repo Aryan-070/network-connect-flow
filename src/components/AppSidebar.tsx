@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Navigation, HelpCircle, Users } from "lucide-react";
+import { Navigation, HelpCircle, Users, FileAudio } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
@@ -23,7 +23,11 @@ const AppSidebar = ({ activeOption, onSelectOption }: SidebarProps) => {
 
   const handleOptionClick = (option: string) => {
     onSelectOption(option);
-    navigate('/');
+    if (option === "session") {
+      navigate('/session');
+    } else {
+      navigate('/');
+    }
   };
 
   const menuItems = [
@@ -42,6 +46,11 @@ const AppSidebar = ({ activeOption, onSelectOption }: SidebarProps) => {
       id: "network",
       icon: Users,
     },
+    {
+      title: "AI Summary Session",
+      id: "session",
+      icon: FileAudio,
+    }
   ];
 
   return (

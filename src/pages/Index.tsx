@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import StepIndicator from "@/components/StepIndicator";
 import AuthForm from "@/components/AuthForm";
@@ -7,16 +6,21 @@ import LinkedinForm from "@/components/LinkedinForm";
 import ConnectionList from "@/components/ConnectionList";
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/AppSidebar";
-
+import PurposeSelection from "@/components/PurposeSelection";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ArrowRight } from "lucide-react";
 const Index = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState<{
     email?: string;
     phoneNumber?: string;
     linkedinUrl?: string;
+    name?: string;
+    purpose?: string;
   }>({});
   const [activeOption, setActiveOption] = useState<string>("network");
-
+  const [skipName, setSkipName] = useState<string>("Aryan");
   const handleAuthSubmit = (data: { email?: string; phoneNumber?: string }) => {
     setUserData((prev) => ({ ...prev, ...data }));
     setCurrentStep(2);
@@ -26,9 +30,18 @@ const Index = () => {
     setCurrentStep(3);
   };
 
-  const handleLinkedinSubmit = (linkedinUrl: string) => {
-    setUserData((prev) => ({ ...prev, linkedinUrl }));
+  const handleLinkedinSubmit = (linkedinUrl: string, name: string) => {
+    setUserData((prev) => {
+      const updatedData = { ...prev, linkedinUrl, name: name.trim() }; // Trim and set the name
+      console.log('Updated User Data:', updatedData); // Print user data here
+      return updatedData;
+    });
     setCurrentStep(4);
+  };
+
+  const handlePurposeSubmit = (purpose: string) => {
+    setUserData((prev) => ({ ...prev, purpose }));
+    setCurrentStep(5);
   };
 
   const handleRestart = () => {
@@ -36,12 +49,19 @@ const Index = () => {
     setUserData({});
   };
 
+  const handleSkipToRecommendations = () => {
+    if (skipName.trim()) {
+      setUserData((prev) => ({ ...prev, name: skipName }));
+      setCurrentStep(5);
+    }
+  };
+
   const handleSelectOption = (option: string) => {
-    setActiveOption(option);
+  setActiveOption(option);
     if (option === "network") {
       // If we're selecting the network option and we have LinkedIn data, show connections
-      if (userData.linkedinUrl) {
-        setCurrentStep(4);
+      if (userData.linkedinUrl && userData.purpose) {
+        setCurrentStep(5);
       } else {
         // If we don't have LinkedIn data yet, start the flow
         setCurrentStep(1);
@@ -66,7 +86,41 @@ const Index = () => {
     // If active option is "network", show the regular flow
     switch (currentStep) {
       case 1:
-        return <AuthForm onNext={handleAuthSubmit} />;
+        return (
+          <div className="space-y-6">
+            <AuthForm onNext={handleAuthSubmit} />
+            
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or skip to recommendations
+                </span>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Input
+                  value={skipName}
+                  onChange={(e) => setSkipName(e.target.value)}
+                  placeholder="Enter your name to skip steps"
+                  className="w-full"
+                />
+              </div>
+              <Button 
+                onClick={handleSkipToRecommendations} 
+                className="w-full gap-2"
+                disabled={!skipName.trim()}
+              >
+                Skip to Recommendations
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
       case 2:
         return (
           <OtpVerification
@@ -80,11 +134,26 @@ const Index = () => {
         return (
           <LinkedinForm
             onBack={() => setCurrentStep(2)}
-            onNext={handleLinkedinSubmit}
+            onNext={handleLinkedinSubmit} // Pass handleLinkedinSubmit to capture LinkedIn URL and name
           />
         );
       case 4:
-        return <ConnectionList onRestart={handleRestart} />;
+        return (
+          <PurposeSelection 
+            onBack={() => setCurrentStep(3)} 
+            onNext={handlePurposeSubmit} 
+            name={userData.name || ''}
+            linkedinUrl={userData.linkedinUrl || ''} 
+          />
+        );
+      case 5:
+      
+        return (
+          <ConnectionList
+            onRestart={handleRestart}
+            name={userData.name || ''} // Pass the name to ConnectionList
+          />
+        );
       default:
         return <AuthForm onNext={handleAuthSubmit} />;
     }
@@ -103,8 +172,8 @@ const Index = () => {
               <SidebarTrigger className="md:hidden" />
               <div></div>
             </div>
-            {activeOption === "network" && currentStep < 4 && (
-              <StepIndicator totalSteps={3} currentStep={currentStep} />
+            {activeOption === "network" && currentStep < 5 && (
+              <StepIndicator totalSteps={4} currentStep={currentStep} />
             )}
             {renderStep()}
           </div>

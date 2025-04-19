@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,32 +6,37 @@ import { Linkedin } from "lucide-react";
 
 interface LinkedinFormProps {
   onBack: () => void;
-  onNext: (linkedinUrl: string) => void;
+  onNext: (linkedinUrl: string, name: string) => void;
 }
 
 const LinkedinForm = ({ onBack, onNext }: LinkedinFormProps) => {
-  const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [linkedinUrl, setLinkedinUrl] = useState('https://www.linkedin.com/in/rajat-khaitan-61542368/');
+  const [name, setName] = useState('Rajat');
   const [error, setError] = useState('');
 
   const validateLinkedinUrl = (url: string) => {
-    // Basic validation to check if the URL contains "linkedin.com"
-    return url.includes('linkedin.com');
+    const regex = /^https:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
+    return regex.test(url);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    if (!name.trim()) {
+      setError('Please enter your name');
+      return;
+    }
+
     if (!linkedinUrl.trim()) {
       setError('Please enter your LinkedIn URL');
       return;
     }
-    
+
     if (!validateLinkedinUrl(linkedinUrl)) {
-      setError('Please enter a valid LinkedIn URL');
+      setError('Please enter a valid LinkedIn profile URL');
       return;
     }
-    
-    onNext(linkedinUrl);
+    onNext(linkedinUrl, name);
   };
 
   return (
@@ -49,6 +53,18 @@ const LinkedinForm = ({ onBack, onNext }: LinkedinFormProps) => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Enter your Name"
+                className="pl-10"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value); // Update the name state
+                  if (error) setError('');
+                }}
+              />
+            </div>
             <div className="relative">
               <Linkedin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -69,10 +85,10 @@ const LinkedinForm = ({ onBack, onNext }: LinkedinFormProps) => {
             <Button type="submit" className="w-full">
               Find Connections
             </Button>
-            
-            <Button 
+
+            <Button
               type="button"
-              variant="outline" 
+              variant="outline"
               className="w-full"
               onClick={onBack}
             >
