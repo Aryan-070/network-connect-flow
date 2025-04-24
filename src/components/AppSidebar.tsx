@@ -25,6 +25,8 @@ const AppSidebar = ({ activeOption, onSelectOption }: SidebarProps) => {
     onSelectOption(option);
     if (option === "session") {
       navigate('/session');
+    } else if (option === "helpdesk") {
+      navigate('/helpdesk');
     } else {
       navigate('/');
     }

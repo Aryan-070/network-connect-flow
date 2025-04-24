@@ -152,7 +152,7 @@ const Index = () => {
           <ConnectionList
             onRestart={handleRestart}
             name={userData.name || ''} // Pass the name to ConnectionList
-          />
+            user={undefined}          />
         );
       default:
         return <AuthForm onNext={handleAuthSubmit} />;
